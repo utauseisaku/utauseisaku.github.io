@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>まめとひ珈琲｜火曜と金曜に、店の奥で豆を焼いています</title>
+<meta name="description" content="まめとひ珈琲は、火曜と金曜に店の奥の焙煎機で豆を焼く喫茶店です。今週の豆、店で飲むもの、豆の量り売り、営業時間について。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <p class="seal">まめとひ珈琲</p>
+    <div class="masthead__text">
+      <h1>火曜と金曜に、<br>店の奥で豆を焼いています。</h1>
+      <p class="lede">席は10ほど。豆を買いに来る人と、一杯だけ飲んでいく人の店です。</p>
+    </div>
+    <p class="next-roast">
+      <span class="next-roast__label">次の焙煎日</span>
+      <time class="next-roast__date" id="next-roast-date">火曜・金曜</time>
+    </p>
+  </div>
+</header>
+
+<main>
+
+  <section class="roast" aria-labelledby="roast-title">
+    <h2 id="roast-title">今週の4種類を、浅煎りから順に並べました。</h2>
+    <div class="roast__band">
+      <div class="roast__beans">
+        <button class="bean" type="button" style="--pos:12%;--anchor:0%" aria-expanded="false" aria-controls="note-ethiopia">エチオピア イルガチェフェ</button>
+        <button class="bean" type="button" style="--pos:40%" aria-expanded="false" aria-controls="note-guatemala">グアテマラ アンティグア</button>
+        <button class="bean" type="button" style="--pos:62%" aria-expanded="false" aria-controls="note-colombia">コロンビア スプレモ</button>
+        <button class="bean" type="button" style="--pos:88%;--anchor:-100%" aria-expanded="false" aria-controls="note-indonesia">インドネシア マンデリン</button>
+      </div>
+      <div class="roast__ramp" aria-hidden="true"></div>
+      <p class="roast__scale" aria-hidden="true"><span>浅煎り</span><span>深煎り</span></p>
+    </div>
+
+    <div class="notes">
+      <div class="note" id="note-ethiopia">
+        <p class="note__taste">レモンの皮と紅茶のような後味。</p>
+        <p class="note__price">100g 900円</p>
+      </div>
+      <div class="note" id="note-guatemala">
+        <p class="note__taste">焦がした砂糖とナッツの香ばしさ。</p>
+        <p class="note__price">100g 850円</p>
+      </div>
+      <div class="note" id="note-colombia">
+        <p class="note__taste">りんごの甘酸っぱさと、軽いココアの余韻。</p>
+        <p class="note__price">100g 850円</p>
+      </div>
+      <div class="note" id="note-indonesia">
+        <p class="note__taste">ハーブのような香りと、どっしりした苦味。</p>
+        <p class="note__price">100g 950円</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="split" aria-labelledby="photo-title">
+    <h2 id="photo-title">焼きたての豆は、網の上で冷まします。</h2>
+    <div class="split__body">
+      <figure class="photo">
+        <img src="img/roast.jpg" width="1200" height="1500" alt="冷却網の上で、焙煎したての豆を混ぜているところ。">
+      </figure>
+    </div>
+  </section>
+
+  <section class="split" aria-labelledby="drink-title">
+    <h2 id="drink-title">店で飲めるもの</h2>
+    <div class="split__body">
+      <ul class="pricelist">
+        <li><span class="pricelist__name">ブレンド</span><span class="pricelist__price">480円</span></li>
+        <li><span class="pricelist__name">シングルオリジン</span><span class="pricelist__price">600円〜</span></li>
+        <li><span class="pricelist__name">カフェオレ</span><span class="pricelist__price">580円</span></li>
+        <li><span class="pricelist__name">水出し</span><span class="pricelist__price">550円</span></li>
+        <li><span class="pricelist__name">ほうじ茶</span><span class="pricelist__price">450円</span></li>
+        <li><span class="pricelist__name">チーズケーキ</span><span class="pricelist__price">520円</span></li>
+        <li><span class="pricelist__name">ガトーショコラ</span><span class="pricelist__price">550円</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="split" aria-labelledby="record-title">
+    <h2 id="record-title">焼いた豆は、翌日から店に並びます。</h2>
+    <div class="split__body">
+      <div class="record">
+        <p>焙煎機は店の奥に1台。火曜と金曜の朝、開店前に焼きます。豆ごとに、投入の量と煎り止めの時間を記録用紙に書いています。</p>
+        <dl class="record__steps">
+          <div><dt>投入</dt><dd>3kg</dd></div>
+          <div><dt>煎り止め</dt><dd>約12分</dd></div>
+        </dl>
+        <p>袋には焼いた日付を押してあります。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="split" aria-labelledby="buy-title">
+    <h2 id="buy-title">豆は100gから量り売りします。</h2>
+    <div class="split__body">
+      <ul class="pricelist pricelist--buy">
+        <li><span class="pricelist__name">100g</span><span class="pricelist__price">850円〜</span></li>
+        <li><span class="pricelist__name">200g</span><span class="pricelist__price">1,600円〜</span></li>
+      </ul>
+      <p class="grind">挽き方は、豆のまま・中細挽き・細挽きの3つから選べます。袋はクラフト紙、日付の印を押してお渡しします。</p>
+      <p class="aside">豆は店頭のみ。取り置きは店頭か電話でどうぞ。</p>
+    </div>
+  </section>
+
+  <section class="split" aria-labelledby="shop-title">
+    <h2 id="shop-title">営業時間と場所</h2>
+    <div class="split__body">
+      <dl class="shop">
+        <div><dt>営業時間</dt><dd>10:00〜18:00</dd></div>
+        <div><dt>定休日</dt><dd>水曜</dd></div>
+        <div><dt>住所</dt><dd>架空市まめ町1-2-3</dd></div>
+        <div><dt>行き方</dt><dd>架空駅の北口から歩いて5分</dd></div>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>※このサイトは練習用に作った架空の店です。</p>
+  <p>写真：<a href="https://unsplash.com/photos/roasted-coffee-beans-in-cooling-tray-2M3m71E5jkw">Unsplash</a>（Unsplash License）</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

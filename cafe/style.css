@@ -1,0 +1,580 @@
+:root {
+  --paper: #E3D3B5;
+  --paper-light: #EFE4CF;
+  --ink: #2E1F16;
+  --stamp: #2F4B49;
+  --bean: #A3A57A;
+  --roast-mid: #8A5A35;
+  --ink-soft: #6B4526;
+  --rule: rgba(138, 90, 53, 0.16);
+  --rule-strong: rgba(46, 31, 22, 0.3);
+  --font-display: "Klee One", "Yu Mincho", serif;
+  --font-body: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", sans-serif;
+  --page: 1200px;
+  --measure: 40em;
+  --gap: 48px;
+  /* バネの硬さ k と減衰 c（JS が getComputedStyle で読む） */
+  --spring-pop: 520 16;
+  --spring-fade: 420 32;
+}
+
+/* --lift だけを transition させるため、長さとして登録する。
+   こうすると JS が毎フレーム書く --press に transition が掛からない。 */
+@property --lift {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  scrollbar-color: var(--roast-mid) var(--paper);
+}
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.8;
+  padding-inline: 24px;
+}
+
+::selection {
+  background: var(--stamp);
+  color: var(--paper-light);
+}
+
+p,
+h1,
+h2,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--stamp);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+
+/* ---- 最初の画面 ---- */
+
+.masthead__inner {
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-block: 40px 24px;
+}
+
+.seal {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--stamp);
+  border: 4px double var(--stamp);
+  padding: 8px 12px;
+  line-height: 1.35;
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(32px, 8.5vw, 51px);
+  word-break: auto-phrase;
+  line-height: 1.45;
+  letter-spacing: 0.03em;
+  margin-block: 24px 0;
+}
+
+.br-pc {
+  display: none;
+}
+
+.lede {
+  max-width: var(--measure);
+  margin-block-start: 16px;
+}
+
+.next-roast {
+  margin-block-start: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.next-roast__label {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+.next-roast__date {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--stamp);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+/* ---- 焙煎度の帯 ---- */
+
+main {
+  max-width: var(--page);
+  margin-inline: auto;
+}
+
+.roast {
+  margin-block-start: 64px;
+}
+
+.roast h2,
+.split h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(28px, 6vw, 34px);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+  /* 見出しが文になり長くなったので、文節の切れ目で折る */
+  word-break: auto-phrase;
+}
+
+.roast__band {
+  margin-block-start: 24px;
+  display: grid;
+  grid-template-columns: 24px 40px minmax(0, 1fr);
+  column-gap: 12px;
+}
+
+.roast__beans {
+  position: relative;
+  grid-column: 3;
+  grid-row: 1;
+  height: 320px;
+}
+
+.roast__ramp {
+  grid-column: 2;
+  grid-row: 1;
+  background: linear-gradient(
+    to bottom,
+    var(--bean) 0%,
+    var(--roast-mid) 58%,
+    var(--ink) 100%
+  );
+}
+
+.roast__scale {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+.roast__scale span {
+  writing-mode: vertical-rl;
+}
+
+.bean {
+  --lift: 0px;
+  --press: 1;
+  position: absolute;
+  left: 0;
+  top: var(--pos);
+  transform: translateY(calc(-50% - var(--lift))) scale(var(--press, 1));
+  margin: 0;
+  padding: 8px 12px;
+  background: var(--paper-light);
+  border: 1px solid var(--rule-strong);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  cursor: pointer;
+  /* transform ではなく --lift を動かす。JS が毎フレーム書く --press と二重にならない */
+  transition: --lift 150ms ease-out;
+}
+
+.bean::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 8px;
+  height: 1px;
+  background: var(--roast-mid);
+}
+
+.bean:hover {
+  --lift: 3px;
+}
+
+.bean:active {
+  --lift: 0px;
+}
+
+.bean[aria-expanded="true"] {
+  background: var(--stamp);
+  border-color: var(--stamp);
+  color: var(--paper-light);
+  font-weight: 700;
+}
+
+.bean[aria-expanded="true"]::before {
+  background: var(--stamp);
+  width: 16px;
+  left: -22px;
+}
+
+.notes {
+  margin-block-start: 24px;
+  max-width: var(--measure);
+}
+
+.note {
+  background: var(--paper-light);
+  padding: 20px 24px;
+}
+
+.note__price {
+  margin-block-start: 4px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  color: var(--roast-mid);
+}
+
+.js .note {
+  display: none;
+}
+
+.js .note.is-open {
+  display: block;
+}
+
+/* ---- 2列のセクション ---- */
+
+.split {
+  margin-block-start: 64px;
+}
+
+.split__body {
+  margin-block-start: 16px;
+}
+
+.split__body > p,
+.split__body > ul,
+.split__body > dl {
+  max-width: var(--measure);
+}
+
+/* 写真 */
+
+.photo img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  width: 100%;
+  background: var(--roast-mid);
+}
+
+/* 値札 */
+
+.pricelist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pricelist li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  column-gap: 12px;
+  padding-block: 4px;
+}
+
+.pricelist li::after {
+  content: "";
+  grid-column: 2;
+  border-bottom: 1px dotted var(--roast-mid);
+  transform: translateY(-4px);
+}
+
+.pricelist__price {
+  grid-column: 3;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.aside {
+  margin-block-start: 16px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.grind {
+  margin-block-start: 16px;
+}
+
+/* 焙煎記録 */
+
+.record {
+  max-width: var(--measure);
+  background-color: var(--paper-light);
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--rule) 0 1px,
+      transparent 1px 24px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--rule) 0 1px,
+      transparent 1px 24px
+    );
+  padding: 24px;
+}
+
+.record p {
+  max-width: 34em;
+}
+
+.record__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin-block: 24px;
+  padding-block: 16px;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.record__steps dt {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+.record__steps dd {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 店のこと */
+
+.shop {
+  display: grid;
+  gap: 8px 24px;
+}
+
+.shop > div {
+  display: grid;
+  grid-template-columns: 6em minmax(0, 1fr);
+  align-items: baseline;
+}
+
+.shop dt {
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+.shop dd {
+  font-variant-numeric: tabular-nums;
+}
+
+/* フッター */
+
+.foot {
+  max-width: var(--page);
+  margin-inline: auto;
+  margin-block-start: 96px;
+  padding-block: 24px 48px;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+.foot p + p {
+  margin-block-start: 4px;
+}
+
+/* ---- PC ---- */
+
+@media (min-width: 1024px) {
+  body {
+    padding-inline: 40px;
+  }
+
+  .br-pc {
+    display: inline;
+  }
+
+  .br-sp {
+    display: none;
+  }
+
+  .masthead__inner {
+    display: grid;
+    align-content: start;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+    align-items: end;
+    column-gap: var(--gap);
+    padding-block: 48px 24px;
+    min-height: auto;
+  }
+
+  .seal {
+    grid-column: 1;
+    justify-self: start;
+    font-size: clamp(2rem, 2.6vw, 2.5rem);
+    padding: 8px 16px 12px;
+    border-width: 5px;
+  }
+
+  .masthead__text {
+    grid-column: 1;
+  }
+
+  .next-roast {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-items: flex-end;
+    text-align: right;
+    margin-block-start: 0;
+    padding-block-end: 8px;
+  }
+
+  .roast {
+    margin-block-start: 56px;
+  }
+
+  .roast__band {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+    margin-block-start: 32px;
+  }
+
+  .roast__beans {
+    grid-column: 1;
+    height: 96px;
+    margin-block-end: 20px;
+  }
+
+  .roast__ramp {
+    grid-column: 1;
+    grid-row: 2;
+    height: 144px;
+    background: linear-gradient(
+      to right,
+      var(--bean) 0%,
+      var(--roast-mid) 58%,
+      var(--ink) 100%
+    );
+  }
+
+  .roast__scale {
+    grid-column: 1;
+    grid-row: 3;
+    flex-direction: row;
+    font-size: 14px;
+    padding-block-start: 8px;
+  }
+
+  .roast__scale span {
+    writing-mode: horizontal-tb;
+  }
+
+  .bean {
+    left: var(--pos);
+    top: auto;
+    bottom: 0;
+    transform: translate(var(--anchor, -50%), calc(0px - var(--lift))) scale(var(--press, 1));
+    text-align: center;
+    white-space: nowrap;
+    font-size: 1.05rem;
+    padding: 8px 16px;
+  }
+
+  .bean::before {
+    left: calc(0px - var(--anchor, -50%));
+    top: 100%;
+    width: 1px;
+    height: 20px;
+  }
+
+  .bean[aria-expanded="true"]::before {
+    width: 1px;
+    height: 20px;
+    background: var(--stamp);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    column-gap: var(--gap);
+    margin-block-start: 96px;
+  }
+
+  .split h2 {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+    /* 左列は約220〜288px。文の見出しが3行に割れないよう下限を21pxにする */
+    font-size: clamp(21px, 2.1vw, 27px);
+    line-height: 1.55;
+  }
+
+  .split__body {
+    margin-block-start: 0;
+  }
+
+  .foot {
+    margin-block-start: 128px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bean {
+    transition: none;
+  }
+
+  .bean:hover {
+    --lift: 0px;
+  }
+}
